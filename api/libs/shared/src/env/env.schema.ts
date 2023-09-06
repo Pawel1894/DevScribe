@@ -13,6 +13,12 @@ const EnvSchema = Joi.object({
 	RABBITMQ_AUTH_QUEUE: Joi.string().required(),
 	RABBITMQ_USER_QUEUE: Joi.string().required(),
 	RABBITMQ_POST_QUEUE: Joi.string().required(),
+	POSTGRES_USER: Joi.string().required(),
+	POSTGRES_PASSWORD: Joi.string().required(),
+	POSTGRES_DB: Joi.string().required(),
+	POSTGRES_URI: Joi.string().required(),
+	PGADMIN_DEFAULT_EMAIL: Joi.string().required(),
+	PGADMIN_DEFAULT_PASSWORD: Joi.string().required(),
 });
 
 export default EnvSchema;

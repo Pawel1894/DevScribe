@@ -13,6 +13,7 @@
 		"incremental": true,
 		"skipLibCheck": true,
 		"strict": true,
+		"strictNullChecks": false,
 		"forceConsistentCasingInFileNames": false,
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
