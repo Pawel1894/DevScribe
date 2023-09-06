@@ -9,6 +9,14 @@ import EnvVariables from "@app/shared/env/env.variables";
 			"AUTH_SERVICE",
 			process.env[EnvVariables.RABBITMQ_AUTH_QUEUE]!,
 		),
+		SharedModule.registerRmq(
+			"POST_SERVICE",
+			process.env[EnvVariables.RABBITMQ_POST_QUEUE]!,
+		),
+		SharedModule.registerRmq(
+			"USER_SERVICE",
+			process.env[EnvVariables.RABBITMQ_USER_QUEUE]!,
+		),
 	],
 	controllers: [AppController],
 })
