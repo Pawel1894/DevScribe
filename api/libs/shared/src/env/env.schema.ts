@@ -5,6 +5,7 @@ const EnvSchema = Joi.object({
 		.valid("development", "production", "test", "provision")
 		.default("development"),
 	PORT: Joi.number().default(3000),
+
 	RABBITMQ_DEFAULT_USER: Joi.string().required(),
 	RABBITMQ_DEFAULT_PASS: Joi.string().required(),
 	RABBITMQ_USER: Joi.string().required(),
@@ -13,10 +14,13 @@ const EnvSchema = Joi.object({
 	RABBITMQ_AUTH_QUEUE: Joi.string().required(),
 	RABBITMQ_USER_QUEUE: Joi.string().required(),
 	RABBITMQ_POST_QUEUE: Joi.string().required(),
+
 	POSTGRES_USER: Joi.string().required(),
 	POSTGRES_PASSWORD: Joi.string().required(),
 	POSTGRES_DB: Joi.string().required(),
-	POSTGRES_URI: Joi.string().required(),
+	POSTGRES_PORT: Joi.number().required(),
+	POSTGRES_HOST: Joi.string().required(),
+
 	PGADMIN_DEFAULT_EMAIL: Joi.string().required(),
 	PGADMIN_DEFAULT_PASSWORD: Joi.string().required(),
 });

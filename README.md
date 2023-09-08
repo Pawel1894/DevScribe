@@ -9,3 +9,6 @@ Created as microservices architecture with nest.js. It contains such tech as pos
 Created using next.js framework with newest app router.
 
 I'll update this description when project will be in more advanced stage.
+
+IF postgres auth is failing, make sure your pc
+is not running postgres on the same port as docker already!
