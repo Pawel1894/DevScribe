@@ -13,12 +13,15 @@
 		"incremental": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"strictNullChecks": false,
 		"forceConsistentCasingInFileNames": false,
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
 			"@app/shared": ["libs/shared/src"],
 			"@app/shared/*": ["libs/shared/src/*"]
 		}
+	},
+	// does not fix watch mode on docker..
+	"watchOptions": {
+		"watchFile": "fixedPollingInterval"
 	}
 }

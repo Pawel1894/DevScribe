@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
+import { SharedModule, DBModule } from "@app/shared";
 import { PostController } from "./post.controller";
 import { PostService } from "./post.service";
-import { DBModule } from "@app/shared/db/db.module";
 
 @Module({
-	imports: [],
-	controllers: [PostController, DBModule],
+	imports: [SharedModule, DBModule],
+	controllers: [PostController],
 	providers: [PostService],
 })
 export class PostModule {}

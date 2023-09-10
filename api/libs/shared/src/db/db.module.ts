@@ -13,7 +13,7 @@ import EnvVariables from "../env/env.variables";
 				port: configService.get<number>(EnvVariables.POSTGRES_PORT),
 				username: configService.get<string>(EnvVariables.POSTGRES_USER),
 				host: configService.get<string>(EnvVariables.POSTGRES_HOST),
-				synchronize: true, // shouldn't be used in production - may lose data
+				synchronize: true, // shouldn't be used in production - may lose data CHANGE
 				autoLoadEntities: true,
 			}),
 
