@@ -5,3 +5,4 @@ export * from "./shared/shared.service";
 export * from "./shared/shared.service.interface";
 export * from "./db/db.module";
 export * from "./entities/user.entity";
+export * from "./repositories/user";
