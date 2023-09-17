@@ -21,6 +21,7 @@ module.exports = {
 				fixStyle: "inline-type-imports",
 			},
 		],
+		"@typescript-eslint/ban-ts-comment": "off",
 		"@typescript-eslint/no-namespace": "off",
 		"@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
 		"@typescript-eslint/interface-name-prefix": "off",

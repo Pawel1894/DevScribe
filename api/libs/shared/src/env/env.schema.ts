@@ -23,6 +23,9 @@ const EnvSchema = Joi.object({
 
 	PGADMIN_DEFAULT_EMAIL: Joi.string().required(),
 	PGADMIN_DEFAULT_PASSWORD: Joi.string().required(),
+
+	JWT_SECRET: Joi.string().required(),
+	JWT_EXPIRATION_TIME: Joi.string().required(),
 });
 
 export default EnvSchema;
