@@ -1,4 +1,4 @@
-import { Controller, Inject, UseGuards } from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 import {
 	Ctx,
 	MessagePattern,
@@ -8,7 +8,6 @@ import {
 
 import { SharedService } from "@app/shared";
 import { ExistingUserDTO, NewUserDTO } from "./dtos";
-import { JwtGuard } from "./jwt.guard";
 import { AuthService } from "./auth.service";
 
 @Controller()
@@ -21,7 +20,6 @@ export class AuthController {
 	@MessagePattern({ cmd: "register" })
 	async register(@Ctx() context: RmqContext, @Payload() newUser: NewUserDTO) {
 		this.sharedService.acknowledgeMessage(context);
-
 		return this.authService.register(newUser);
 	}
 
@@ -31,18 +29,15 @@ export class AuthController {
 		@Payload() existingUser: ExistingUserDTO,
 	) {
 		this.sharedService.acknowledgeMessage(context);
-
 		return this.authService.login(existingUser);
 	}
 
 	@MessagePattern({ cmd: "verify-jwt" })
-	@UseGuards(JwtGuard)
 	async verifyJwt(
 		@Ctx() context: RmqContext,
 		@Payload() payload: { jwt: string },
 	) {
 		this.sharedService.acknowledgeMessage(context);
-
 		return this.authService.verifyJwt(payload.jwt);
 	}
 
@@ -52,7 +47,6 @@ export class AuthController {
 		@Payload() payload: { jwt: string },
 	) {
 		this.sharedService.acknowledgeMessage(context);
-
 		return this.authService.getUserFromHeader(payload.jwt);
 	}
 }

@@ -1,5 +1,6 @@
-import { Body, Controller, Inject, Post } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, UseGuards } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
+import { AuthGuard } from "./guards/auth.guard";
 
 @Controller()
 export class AppController {
@@ -41,5 +42,11 @@ export class AppController {
 				password,
 			},
 		);
+	}
+
+	@UseGuards(AuthGuard)
+	@Get("test")
+	test() {
+		return "Auth works!";
 	}
 }
