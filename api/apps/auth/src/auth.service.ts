@@ -2,6 +2,7 @@ import {
 	BadRequestException,
 	ConflictException,
 	Injectable,
+	NotFoundException,
 	UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
@@ -108,32 +109,45 @@ export class AuthService {
 		const user = await this.validateUser(email, password);
 
 		if (!user) {
-			throw new UnauthorizedException();
+			throw new NotFoundException("User not found!");
 		}
 
-		// delete user.password;
-
-		const token = await this.getToken({ user });
-		const refreshToken = await this.getToken({
-			user,
-			params: {
-				expiresIn: this.configService.get(
-					EnvVariables.JWT_REFRESH_EXPIRATION_TIME,
-				),
-			},
-		});
+		const { token, refreshToken } = await this.getTokens(user);
 
 		return { token, refreshToken, user };
 	}
 
-	async getToken({
-		user,
-		params,
-	}: {
-		user: Readonly<ExistingUserDTO>;
-		params?: Partial<{ expiresIn: string; secret: string }>;
-	}): Promise<string> {
-		const token = await this.jwtService.signAsync({ user }, params);
-		return token;
+	async refreshToken(refreshToken: string) {
+		const { user } = await this.verifyJwt(refreshToken);
+		const existingUser = Boolean(await this.findByEmail(user.email));
+
+		if (!existingUser) {
+			throw new NotFoundException("User not found!");
+		}
+
+		const { token, refreshToken: newRefreshToken } = await this.getTokens(user);
+
+		return { token, refreshToken: newRefreshToken };
+	}
+
+	async getTokens(user: Omit<UserEntity, "password">) {
+		const userData = {
+			sub: user.id,
+			email: user.email,
+		};
+
+		const [token, refreshToken] = await Promise.all([
+			this.jwtService.signAsync({ ...userData }),
+			this.jwtService.signAsync(
+				{ ...userData },
+				{
+					expiresIn: this.configService.get(
+						EnvVariables.JWT_REFRESH_EXPIRATION_TIME,
+					),
+				},
+			),
+		]);
+
+		return { token, refreshToken };
 	}
 }
