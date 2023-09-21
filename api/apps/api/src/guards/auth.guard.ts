@@ -1,3 +1,4 @@
+import { extractBearerTokenFromAuthHeader } from "@app/shared";
 import {
 	type CanActivate,
 	type ExecutionContext,
@@ -24,13 +25,10 @@ export class AuthGuard implements CanActivate {
 		const request = context.switchToHttp().getRequest();
 		const authHeader = request.headers["authorization"];
 
-		if (!authHeader) return false;
+		if (!authHeader || typeof authHeader !== "string") return false;
 
-		const authHeaderParts = (authHeader as string).split(" ");
-
-		if (authHeaderParts[0]?.toLowerCase() !== "bearer") return false;
-
-		const [, jwt] = authHeaderParts;
+		const jwt = extractBearerTokenFromAuthHeader(authHeader);
+		if (!jwt) return false;
 
 		return this.authService.send({ cmd: "verify-jwt" }, { jwt }).pipe(
 			switchMap(({ exp }) => {
@@ -43,7 +41,7 @@ export class AuthGuard implements CanActivate {
 				return of(isJwtValid);
 			}),
 			catchError(() => {
-				throw new UnauthorizedException();
+				throw new UnauthorizedException("invalid token");
 			}),
 		);
 	}
