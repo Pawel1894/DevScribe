@@ -9,12 +9,15 @@ import { JwtService } from "@nestjs/jwt";
 
 import { type UserEntity, type UserJwt, UsersRepository } from "@app/shared";
 import type { ExistingUserDTO, NewUserDTO } from "./dtos";
+import { ConfigService } from "@nestjs/config";
+import EnvVariables from "@app/shared/env/env.variables";
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly usersRepository: UsersRepository,
 		private readonly jwtService: JwtService,
+		private readonly configService: ConfigService,
 	) {}
 
 	async hashPassword(password: string): Promise<string> {
@@ -110,8 +113,27 @@ export class AuthService {
 
 		// delete user.password;
 
-		const jwt = await this.jwtService.signAsync({ user });
+		const token = await this.getToken({ user });
+		const refreshToken = await this.getToken({
+			user,
+			params: {
+				expiresIn: this.configService.get(
+					EnvVariables.JWT_REFRESH_EXPIRATION_TIME,
+				),
+			},
+		});
 
-		return { token: jwt, user };
+		return { token, refreshToken, user };
+	}
+
+	async getToken({
+		user,
+		params,
+	}: {
+		user: Readonly<ExistingUserDTO>;
+		params?: Partial<{ expiresIn: string; secret: string }>;
+	}): Promise<string> {
+		const token = await this.jwtService.signAsync({ user }, params);
+		return token;
 	}
 }

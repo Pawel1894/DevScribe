@@ -26,6 +26,7 @@ const EnvSchema = Joi.object({
 
 	JWT_SECRET: Joi.string().required(),
 	JWT_EXPIRATION_TIME: Joi.string().required(),
+	JWT_REFRESH_EXPIRATION_TIME: Joi.string().required(),
 });
 
 export default EnvSchema;

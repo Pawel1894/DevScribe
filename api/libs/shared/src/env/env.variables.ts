@@ -20,6 +20,7 @@ const EnvVariables = {
 
 	JWT_SECRET: "JWT_SECRET",
 	JWT_EXPIRATION_TIME: "JWT_EXPIRATION_TIME",
+	JWT_REFRESH_EXPIRATION_TIME: "JWT_REFRESH_EXPIRATION_TIME",
 } as const;
 
 export default EnvVariables;
