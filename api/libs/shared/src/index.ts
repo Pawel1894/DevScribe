@@ -8,3 +8,4 @@ export * from "./entities/user.entity";
 export * from "./repositories/user";
 export * from "./user/user-jwt.interface";
 export * from "./user/user-request.interface";
+export * from "./utils";
