@@ -6,7 +6,7 @@ import {
 	RmqContext,
 } from "@nestjs/microservices";
 
-import { SharedService } from "@app/shared";
+import { SharedService, type UserJwt } from "@app/shared";
 import { ExistingUserDTO, NewUserDTO } from "./dtos";
 import { AuthService } from "./auth.service";
 
@@ -53,9 +53,10 @@ export class AuthController {
 	@MessagePattern({ cmd: "refresh-token" })
 	async refreshToken(
 		@Ctx() context: RmqContext,
-		@Payload() payload: { jwt: string },
+		@Payload() payload: { user: UserJwt["user"] },
 	) {
 		this.sharedService.acknowledgeMessage(context);
-		return this.authService.refreshToken(payload.jwt);
+
+		return this.authService.refreshToken(payload.user);
 	}
 }

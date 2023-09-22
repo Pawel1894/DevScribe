@@ -136,12 +136,7 @@ export class AuthService implements IAuthService {
 		};
 
 		const [token, refreshToken] = await Promise.all([
-			this.jwtService.signAsync(
-				{ ...payload },
-				{
-					expiresIn: this.configService.get(EnvVariables.JWT_EXPIRATION_TIME),
-				},
-			),
+			this.jwtService.signAsync({ ...payload }),
 			this.jwtService.signAsync(
 				{ ...payload },
 				{

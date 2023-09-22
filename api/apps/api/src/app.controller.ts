@@ -6,12 +6,16 @@ import {
 	Post,
 	UseGuards,
 	Headers,
-	BadRequestException,
+	UseInterceptors,
+	Req,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "./guards/auth.guard";
 import { TokenType } from "./decorators/token-type.decorator";
+import { AttachUserInterceptor } from "./interceptors/attach-user.interceptor";
+import { type UserJwt } from "@app/shared";
 
+@UseInterceptors(AttachUserInterceptor)
 @Controller()
 export class AppController {
 	constructor(
@@ -57,10 +61,14 @@ export class AppController {
 	@TokenType("refreshToken")
 	@UseGuards(AuthGuard)
 	@Get("auth/refresh")
-	refresh(@Headers("authorization") authHeader: string) {
-		if (!authHeader) throw new BadRequestException("No auth header provided");
-
-		return this.authService.send({ cmd: "refresh" }, { authHeader });
+	refresh(@Req() req: UserJwt) {
+		const user = req["user"];
+		return this.authService.send(
+			{ cmd: "refresh-token" },
+			{
+				user,
+			},
+		);
 	}
 
 	@UseGuards(AuthGuard)
