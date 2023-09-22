@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Inject, Post, UseGuards } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Get,
+	Inject,
+	Post,
+	UseGuards,
+	Headers,
+	BadRequestException,
+} from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "./guards/auth.guard";
+import { TokenType } from "./decorators/token-type.decorator";
 
 @Controller()
 export class AppController {
@@ -44,6 +54,16 @@ export class AppController {
 		);
 	}
 
+	@TokenType("token")
+	@UseGuards(AuthGuard)
+	@Get("auth/refresh")
+	refresh(@Headers("authorization") authHeader: string) {
+		if (!authHeader) throw new BadRequestException("No auth header provided");
+
+		return this.authService.send({ cmd: "refresh" }, { authHeader });
+	}
+
+	@TokenType("token")
 	@UseGuards(AuthGuard)
 	@Get("test")
 	test() {
