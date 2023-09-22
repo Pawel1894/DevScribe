@@ -6,18 +6,26 @@ import {
 	Injectable,
 	UnauthorizedException,
 } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import { ClientProxy } from "@nestjs/microservices";
 import { type Observable, catchError, of, switchMap } from "rxjs";
+import type { TokenType } from "../decorators/token-type.decorator";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 	constructor(
 		@Inject("AUTH_SERVICE") private readonly authService: ClientProxy,
+		private reflector: Reflector,
 	) {}
 
 	canActivate(
 		context: ExecutionContext,
 	): boolean | Promise<boolean> | Observable<boolean> {
+		const tokenType = this.reflector.get<TokenType>(
+			"tokenType",
+			context.getHandler(),
+		);
+
 		if (context.getType() !== "http") {
 			return false;
 		}
@@ -41,7 +49,7 @@ export class AuthGuard implements CanActivate {
 				return of(isJwtValid);
 			}),
 			catchError(() => {
-				throw new UnauthorizedException("invalid token");
+				throw new UnauthorizedException(`invalid ${tokenType}`);
 			}),
 		);
 	}
