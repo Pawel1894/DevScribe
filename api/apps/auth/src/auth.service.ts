@@ -12,9 +12,10 @@ import { type UserEntity, type UserJwt, UsersRepository } from "@app/shared";
 import type { ExistingUserDTO, NewUserDTO } from "./dtos";
 import { ConfigService } from "@nestjs/config";
 import EnvVariables from "@app/shared/env/env.variables";
+import type { IAuthService } from "./interfaces/auth.service.interface";
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
 	constructor(
 		private readonly usersRepository: UsersRepository,
 		private readonly jwtService: JwtService,
@@ -112,34 +113,37 @@ export class AuthService {
 			throw new NotFoundException("User not found!");
 		}
 
-		const { token, refreshToken } = await this.getTokens(user);
+		const { token, refreshToken } = await this.getTokens({
+			sub: user.id,
+			email: user.email,
+		});
 
 		return { token, refreshToken, user };
 	}
 
-	async refreshToken(refreshToken: string) {
-		const { user } = await this.verifyJwt(refreshToken);
-		const existingUser = Boolean(await this.findByEmail(user.email));
-
-		if (!existingUser) {
-			throw new NotFoundException("User not found!");
-		}
+	async refreshToken(user: UserJwt["user"]) {
+		if (!user) throw new BadRequestException("No user provided");
 
 		const { token, refreshToken: newRefreshToken } = await this.getTokens(user);
 
 		return { token, refreshToken: newRefreshToken };
 	}
 
-	async getTokens(user: Omit<UserEntity, "password">) {
-		const userData = {
-			sub: user.id,
+	async getTokens(user: NonNullable<UserJwt["user"]>) {
+		const payload = {
+			sub: user.sub,
 			email: user.email,
 		};
 
 		const [token, refreshToken] = await Promise.all([
-			this.jwtService.signAsync({ ...userData }),
 			this.jwtService.signAsync(
-				{ ...userData },
+				{ ...payload },
+				{
+					expiresIn: this.configService.get(EnvVariables.JWT_EXPIRATION_TIME),
+				},
+			),
+			this.jwtService.signAsync(
+				{ ...payload },
 				{
 					expiresIn: this.configService.get(
 						EnvVariables.JWT_REFRESH_EXPIRATION_TIME,
