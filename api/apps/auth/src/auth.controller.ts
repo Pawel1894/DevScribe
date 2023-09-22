@@ -49,4 +49,13 @@ export class AuthController {
 		this.sharedService.acknowledgeMessage(context);
 		return this.authService.getUserFromHeader(payload.jwt);
 	}
+
+	@MessagePattern({ cmd: "refresh-token" })
+	async refreshToken(
+		@Ctx() context: RmqContext,
+		@Payload() payload: { jwt: string },
+	) {
+		this.sharedService.acknowledgeMessage(context);
+		return this.authService.refreshToken(payload.jwt);
+	}
 }
