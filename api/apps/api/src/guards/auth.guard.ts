@@ -21,10 +21,9 @@ export class AuthGuard implements CanActivate {
 	canActivate(
 		context: ExecutionContext,
 	): boolean | Promise<boolean> | Observable<boolean> {
-		const tokenType = this.reflector.get<TokenType>(
-			"tokenType",
-			context.getHandler(),
-		);
+		const tokenType =
+			this.reflector.get<TokenType>("tokenType", context.getHandler()) ??
+			"token";
 
 		if (context.getType() !== "http") {
 			return false;

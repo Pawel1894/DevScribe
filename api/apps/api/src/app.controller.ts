@@ -54,7 +54,7 @@ export class AppController {
 		);
 	}
 
-	@TokenType("token")
+	@TokenType("refreshToken")
 	@UseGuards(AuthGuard)
 	@Get("auth/refresh")
 	refresh(@Headers("authorization") authHeader: string) {
@@ -63,7 +63,6 @@ export class AppController {
 		return this.authService.send({ cmd: "refresh" }, { authHeader });
 	}
 
-	@TokenType("token")
 	@UseGuards(AuthGuard)
 	@Get("test")
 	test() {
