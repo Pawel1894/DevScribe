@@ -1,4 +1,4 @@
-import { UserJwt } from "@app/shared";
+import { Services, UserJwt } from "@app/shared";
 import {
 	type CallHandler,
 	type ExecutionContext,
@@ -7,14 +7,12 @@ import {
 	Inject,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { subscribe } from "diagnostics_channel";
-import { type Request } from "express";
-import { map, switchMap, type Observable, firstValueFrom } from "rxjs";
+import { type Observable, firstValueFrom } from "rxjs";
 
 @Injectable()
 export class AttachUserInterceptor implements NestInterceptor {
 	constructor(
-		@Inject("AUTH_SERVICE") private readonly authService: ClientProxy,
+		@Inject(Services.AuthService) private readonly authService: ClientProxy,
 	) {}
 
 	async intercept(

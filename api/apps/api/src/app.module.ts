@@ -1,20 +1,20 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
-import { SharedModule } from "@app/shared";
+import { Services, SharedModule } from "@app/shared";
 import EnvVariables from "@app/shared/env/env.variables";
 
 @Module({
 	imports: [
 		SharedModule.registerRmq(
-			"AUTH_SERVICE",
+			Services.AuthService,
 			process.env[EnvVariables.RABBITMQ_AUTH_QUEUE]!,
 		),
 		SharedModule.registerRmq(
-			"POST_SERVICE",
+			Services.PostService,
 			process.env[EnvVariables.RABBITMQ_POST_QUEUE]!,
 		),
 		SharedModule.registerRmq(
-			"USER_SERVICE",
+			Services.UserService,
 			process.env[EnvVariables.RABBITMQ_USER_QUEUE]!,
 		),
 	],

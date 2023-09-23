@@ -9,3 +9,4 @@ export * from "./repositories/user";
 export * from "./user/user-jwt.interface";
 export * from "./user/user-request.interface";
 export * from "./utils";
+export * from "./consts/services.const";

@@ -1,4 +1,4 @@
-import { extractBearerTokenFromAuthHeader } from "@app/shared";
+import { Services, extractBearerTokenFromAuthHeader } from "@app/shared";
 import {
 	type CanActivate,
 	type ExecutionContext,
@@ -14,7 +14,7 @@ import type { TokenType } from "../decorators/token-type.decorator";
 @Injectable()
 export class AuthGuard implements CanActivate {
 	constructor(
-		@Inject("AUTH_SERVICE") private readonly authService: ClientProxy,
+		@Inject(Services.AuthService) private readonly authService: ClientProxy,
 		private reflector: Reflector,
 	) {}
 

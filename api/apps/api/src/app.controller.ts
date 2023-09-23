@@ -5,7 +5,6 @@ import {
 	Inject,
 	Post,
 	UseGuards,
-	Headers,
 	UseInterceptors,
 	Req,
 } from "@nestjs/common";
@@ -13,13 +12,13 @@ import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "./guards/auth.guard";
 import { TokenType } from "./decorators/token-type.decorator";
 import { AttachUserInterceptor } from "./interceptors/attach-user.interceptor";
-import { type UserJwt } from "@app/shared";
+import { Services, type UserJwt } from "@app/shared";
 
 @UseInterceptors(AttachUserInterceptor)
 @Controller()
 export class AppController {
 	constructor(
-		@Inject("AUTH_SERVICE") private readonly authService: ClientProxy,
+		@Inject(Services.AuthService) private readonly authService: ClientProxy,
 	) {}
 
 	@Post("auth/register")
