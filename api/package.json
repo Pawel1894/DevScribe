@@ -22,8 +22,7 @@
 		"build:doc": "npx @compodoc/compodoc -p tsconfig.json -s -n 'DevScribe API Documentation'  --theme 'material'",
 		"compodoc": "npx @compodoc/compodoc -p tsconfig.json -s  --coverageTest 0",
 		"prepare": "cd ../ && husky install ./api/.husky",
-		"type-check": "tsc --noEmit",
-		"precommit": "npm run format && npm run lint && npm run type-check && npm run compodoc"
+		"precommit": "prettier --write && eslint --fix && tsc --noEmit && npm run compodoc"
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",
@@ -99,10 +98,10 @@
 	},
 	"lint-staged": {
 		"apps/**/*": [
-			"npm run format"
+			"npm run precommit"
 		],
 		"libs/**/*": [
-			"npm run format"
+			"npm run precommit"
 		]
 	}
 }
