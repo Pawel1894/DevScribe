@@ -16,6 +16,9 @@ import { AttachUserInterceptor } from "./interceptors/attach-user.interceptor";
 import { type UserEntity, type UserJwt, Services } from "@app/shared";
 import type { ILogin, Tokens } from "./interfaces/app.controller.interface";
 
+/**
+ * This is the main controller for the app.
+ */
 @UseInterceptors(AttachUserInterceptor)
 @Controller()
 export class AppController {
