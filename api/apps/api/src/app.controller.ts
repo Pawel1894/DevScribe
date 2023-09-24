@@ -1,3 +1,4 @@
+import { Observable } from "rxjs";
 import {
 	Body,
 	Controller,
@@ -12,7 +13,8 @@ import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "./guards/auth.guard";
 import { TokenType } from "./decorators/token-type.decorator";
 import { AttachUserInterceptor } from "./interceptors/attach-user.interceptor";
-import { Services, type UserJwt } from "@app/shared";
+import { type UserEntity, type UserJwt, Services } from "@app/shared";
+import type { ILogin, Tokens } from "./interfaces/app.controller.interface";
 
 @UseInterceptors(AttachUserInterceptor)
 @Controller()
@@ -22,12 +24,12 @@ export class AppController {
 	) {}
 
 	@Post("auth/register")
-	async register(
+	register(
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
 		@Body("email") email: string,
 		@Body("password") password: string,
-	) {
+	): Observable<UserEntity> {
 		return this.authService.send(
 			{
 				cmd: "register",
@@ -42,10 +44,10 @@ export class AppController {
 	}
 
 	@Post("auth/login")
-	async login(
+	login(
 		@Body("email") email: string,
 		@Body("password") password: string,
-	) {
+	): Observable<ILogin> {
 		return this.authService.send(
 			{
 				cmd: "login",
@@ -60,7 +62,7 @@ export class AppController {
 	@TokenType("refreshToken")
 	@UseGuards(AuthGuard)
 	@Get("auth/refresh")
-	refresh(@Req() req: UserJwt) {
+	refresh(@Req() req: UserJwt): Observable<Tokens> {
 		const user = req["user"];
 		return this.authService.send(
 			{ cmd: "refresh-token" },
@@ -72,7 +74,7 @@ export class AppController {
 
 	@UseGuards(AuthGuard)
 	@Get("test")
-	test() {
+	test(): string {
 		return "Auth works!";
 	}
 }
