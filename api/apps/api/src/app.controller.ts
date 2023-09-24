@@ -23,6 +23,9 @@ export class AppController {
 		@Inject(Services.AuthService) private readonly authService: ClientProxy,
 	) {}
 
+	/**
+	 * This route is used to register a new user.
+	 */
 	@Post("auth/register")
 	register(
 		@Body("firstName") firstName: string,
@@ -43,6 +46,9 @@ export class AppController {
 		);
 	}
 
+	/**
+	 * This route is used to login a user.
+	 */
 	@Post("auth/login")
 	login(
 		@Body("email") email: string,
@@ -59,6 +65,9 @@ export class AppController {
 		);
 	}
 
+	/**
+	 * This route is used to get new jwt and refresh tokens.
+	 */
 	@TokenType("refreshToken")
 	@UseGuards(AuthGuard)
 	@Get("auth/refresh")
@@ -72,6 +81,9 @@ export class AppController {
 		);
 	}
 
+	/**
+	 * This is a test route to ensure that the auth guard is working.
+	 */
 	@UseGuards(AuthGuard)
 	@Get("test")
 	test(): string {
