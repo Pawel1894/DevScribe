@@ -90,6 +90,6 @@ export class AppController {
 	@UseGuards(AuthGuard)
 	@Get("test")
 	test(): string {
-		return "Auth works!";
+		return "Auth works!44";
 	}
 }
