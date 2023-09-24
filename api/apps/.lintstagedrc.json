@@ -1,3 +1,0 @@
-{
-	"*.ts": ["compodoc --coverageMinimumPerFile 50", "eslint", "prettier --write"]
-}

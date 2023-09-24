@@ -20,7 +20,10 @@
 		"test:e2e": "jest --config ./apps/api/test/jest-e2e.json",
 		"start:doc": "npx @compodoc/compodoc -p tsconfig.json -s -n \"DevScribe API Documentation\" -w --theme 'material'",
 		"build:doc": "npx @compodoc/compodoc -p tsconfig.json -s -n 'DevScribe API Documentation'  --theme 'material'",
-		"prepare": "cd ../ && husky install ./api/.husky"
+		"compodoc": "npx @compodoc/compodoc -p tsconfig.json -s  --coverageTest 0",
+		"prepare": "cd ../ && husky install ./api/.husky",
+		"type-check": "tsc --noEmit",
+		"precommit": "npm run format && npm run lint && npm run type-check && npm run compodoc"
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",
@@ -93,5 +96,13 @@
 		"moduleNameMapper": {
 			"^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
 		}
+	},
+	"lint-staged": {
+		"apps/**/*": [
+			"npm run format"
+		],
+		"libs/**/*": [
+			"npm run format"
+		]
 	}
 }

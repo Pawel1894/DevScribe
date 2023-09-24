@@ -50,13 +50,15 @@ export class AuthController {
 		return this.authService.getUserFromHeader(payload.jwt);
 	}
 
+	/**
+	 * This route is used to refresh a user's token.
+	 */
 	@MessagePattern({ cmd: "refresh-token" })
 	async refreshToken(
 		@Ctx() context: RmqContext,
 		@Payload() payload: { user: UserJwt["user"] },
 	) {
 		this.sharedService.acknowledgeMessage(context);
-
 		return this.authService.refreshToken(payload.user);
 	}
 }
