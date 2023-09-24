@@ -20,9 +20,7 @@
 		"test:e2e": "jest --config ./apps/api/test/jest-e2e.json",
 		"start:doc": "npx @compodoc/compodoc -p tsconfig.json -s -n \"DevScribe API Documentation\" -w --theme 'material'",
 		"build:doc": "npx @compodoc/compodoc -p tsconfig.json -s -n 'DevScribe API Documentation'  --theme 'material'",
-		"compodoc": "npx @compodoc/compodoc -p tsconfig.json -s  --coverageTest 0",
-		"prepare": "cd ../ && husky install ./api/.husky",
-		"precommit": "prettier --write && eslint --fix && tsc --noEmit && npm run compodoc"
+		"prepare": "cd ../ && husky install ./api/.husky"
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",
@@ -42,6 +40,7 @@
 		"pg": "^8.11.3",
 		"reflect-metadata": "^0.1.13",
 		"rxjs": "^7.8.1",
+		"tsc-files": "^1.1.4",
 		"typeorm": "^0.3.17"
 	},
 	"devDependencies": {
@@ -97,11 +96,14 @@
 		}
 	},
 	"lint-staged": {
+		"**/*.ts": "tsc-files --noEmit",
 		"apps/**/*": [
-			"npm run precommit"
+			"prettier --write",
+			"eslint --fix"
 		],
 		"libs/**/*": [
-			"npm run precommit"
+			"prettier --write",
+			"eslint --fix"
 		]
 	}
 }
